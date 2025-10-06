@@ -1,3 +1,11 @@
+# =======================================================================
+# PYGBAG PREPARATION NOTES:
+# 1. Ensure this file is named 'main.py'.
+# 2. Ensure 'tictactoe.py' is in the same directory.
+# 3. Ensure the font file 'OpenSans-Regular.ttf' is in the same directory.
+# 4. Run the project using the command: 'pygbag .'
+# =======================================================================
+
 import pygame
 import sys
 import time
@@ -13,6 +21,7 @@ white = (255, 255, 255)
 
 screen = pygame.display.set_mode(size)
 
+# Ensure 'OpenSans-Regular.ttf' is present in the same directory
 mediumFont = pygame.font.Font("OpenSans-Regular.ttf", 28)
 largeFont = pygame.font.Font("OpenSans-Regular.ttf", 40)
 moveFont = pygame.font.Font("OpenSans-Regular.ttf", 60)
@@ -25,6 +34,8 @@ while True:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            # Clean exit for both desktop and PyGbag environments
+            pygame.quit()
             sys.exit()
 
     screen.fill(black)
@@ -111,7 +122,11 @@ while True:
         # Check for AI move
         if user != player and not game_over:
             if ai_turn:
-                time.sleep(0.5)
+                # time.sleep(0.5)
+                # Note: time.sleep() will block the browser thread.
+
+# In PyGbag, for better performance, you might prefer
+                # an asynchronous or frame-based delay, but this will work.
                 move = ttt.minimax(board)
                 board = ttt.result(board, move)
                 ai_turn = False
