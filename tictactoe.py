@@ -1,7 +1,7 @@
 """
 Tic Tac Toe Player
 """
-
+import random
 import math
 import copy
 
@@ -57,6 +57,8 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
+    if action[0] < 0 or action[1] < 0 or action[0] > 2 or action[1] > 2:
+        raise ValueError("None cought")
     play = player(board)
     deepCopy = copy.deepcopy(board)
     if deepCopy[action[0]][action[1]] == EMPTY:
@@ -81,12 +83,12 @@ def winner(board):
 
 def check_winner(board, player):
     return (
-        board[0][0] == board[0][1] == board[0][2] == player or
-        board[1][0] == board[1][1] == board[1][2] == player or
-        board[2][0] == board[2][1] == board[2][2] == player or
-        board[0][0] == board[1][0] == board[2][0] == player or
-        board[0][1] == board[1][1] == board[2][1] == player or
-        board[0][2] == board[1][2] == board[2][2] == player or
+        board[0][0] == board[0][1] == board[0][2] == player or#
+        board[1][0] == board[1][1] == board[1][2] == player or#
+        board[2][0] == board[2][1] == board[2][2] == player or#
+        board[0][0] == board[1][0] == board[2][0] == player or#
+        board[0][1] == board[1][1] == board[2][1] == player or#
+        board[0][2] == board[1][2] == board[2][2] == player or#
         board[0][0] == board[1][1] == board[2][2] == player or
         board[0][2] == board[1][1] == board[2][0] == player
     )
@@ -129,6 +131,39 @@ def utility(board):
     raise NotImplementedError
 
 
+def estimation(board,action):
+    states = []
+    temp = []
+    for i in range(3):
+        for j in range(3):
+            temp.append(board[i][j])
+        states.append(temp)
+        temp =[]
+    for i in range(3):
+        for j in range(3):
+            temp.append(board[j][i])
+        states.append(temp)
+        temp =[]
+    states.append([board[0][0], board[1][1], board[2][2]])
+    states.append([board[0][2], board[1][1], board[2][0]])
+    #states = [[X,O,EMPTY],[X,X,X]]
+    X=0
+    O=0
+    empty = 0
+    for i in states:
+        if any(n == EMPTY for n in i):
+            for j in i:
+                if j == "X":
+                    X+=1
+                elif j == "O":
+                    O+=1
+                else:
+                    empty+=1
+
+
+
+
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
@@ -139,18 +174,26 @@ def minimax(board):
     stack += actions(board)
     playing = player(board)
     value = None
+    if terminal(board):
+        return None
     if playing == "X":
         v = -1000
         while stack:
             checked.append(stack[len(stack)-1])
-            v = max(v,minValue(result(board,stack.pop())))
+            result1 = result(board,stack.pop())
+            v = max(v,minValue(result1))
             checkedVal.append(v)
             if v == 1:
                 return checked.pop()
         # value = minValue(board)
+        # maxVal = []
+        # for i in range(len(checkedVal)):
+        #     if checkedVal[i] == max(checkedVal):
+        #         maxVal.append(i)
+        # return checked[random.choice(maxVal)]
 
         return checked[checkedVal.index(max(checkedVal))]
-        value = maxValue(board)
+        # value = maxValue(board)
     else:
         v = 1000
         while stack:
@@ -160,8 +203,13 @@ def minimax(board):
             if v == -1:
                 return checked.pop()
         # value = minValue(board)
-
+        # minVal = []
+        # for i in range(len(checkedVal)):
+        #     if checkedVal[i] == min(checkedVal):
+        #         minVal.append(i)
+        # return checked[random.choice(minVal)]
         return checked[checkedVal.index(min(checkedVal))]
+    
     raise NotImplementedError
 
 def maxValue(board): 
