@@ -1,1 +1,0 @@
-# dummy pythonrc.py to satisfy pygbag
