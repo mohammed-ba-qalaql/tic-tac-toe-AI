@@ -179,38 +179,63 @@ def minimax(board):
     if playing == "X":
         v = -1000
         while stack:
-            checked.append(stack[len(stack)-1])
-            result1 = result(board,stack.pop())
-            v = max(v,minValue(result1))
-            checkedVal.append(v)
+            move = stack.pop()
+            # checked.append(move)
+            result1 = result(board,move)
+            value = minValue(result1)
+            checked.append((move,value))
+            checkedVal.append(value)
+            v = max(v,value)
+            # checkedVal.append((move,v))
             if v == 1:
-                return checked.pop()
+                return move
         # value = minValue(board)
-        # maxVal = []
-        # for i in range(len(checkedVal)):
-        #     if checkedVal[i] == max(checkedVal):
-        #         maxVal.append(i)
-        # return checked[random.choice(maxVal)]
+        maxVal = []
+        for i in range(len(checked)):
+            if checked[i][1] == max(checkedVal):
+                maxVal.append(i)
+        return checked[random.choice(maxVal)][0]
 
-        return checked[checkedVal.index(max(checkedVal))]
+        #return checked[checkedVal.index(max(checkedVal))]
         # value = maxValue(board)
     else:
         v = 1000
         while stack:
-            checked.append(stack[len(stack)-1])
-            v = min(v,maxValue(result(board,stack.pop())))
-            checkedVal.append(v)
+            move = stack.pop()
+            # checked.append(move)
+            result1 = result(board,move)
+            value = maxValue(result1)
+            checked.append((move,value))
+            checkedVal.append(value)
+            v = min(v,value)
+            # checkedVal.append((move,v))
             if v == -1:
-                return checked.pop()
+                return move
         # value = minValue(board)
-        # minVal = []
-        # for i in range(len(checkedVal)):
-        #     if checkedVal[i] == min(checkedVal):
-        #         minVal.append(i)
-        # return checked[random.choice(minVal)]
-        return checked[checkedVal.index(min(checkedVal))]
+        minVal = []
+        for i in range(len(checked)):
+            if checked[i][1] == min(checkedVal):
+                minVal.append(i)
+        return checked[random.choice(minVal)][0]
+
+
+
+
+
+
+        #     checked.append(stack[len(stack)-1])
+        #     v = min(v,maxValue(result(board,stack.pop())))
+        #     checkedVal.append(v)
+        #     if v == -1:
+        #         return checked.pop()
+        # # value = minValue(board)
+        # # minVal = []
+        # # for i in range(len(checkedVal)):
+        # #     if checkedVal[i] == min(checkedVal):
+        # #         minVal.append(i)
+        # # return checked[random.choice(minVal)]
+        # return checked[checkedVal.index(min(checkedVal))]
     
-    raise NotImplementedError
 
 def maxValue(board): 
     stack = []
